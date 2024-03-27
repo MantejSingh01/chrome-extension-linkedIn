@@ -12,7 +12,7 @@ import VisitedPagesTable from "./components/VisitedPagesTable";
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <VisitedPagesTable />,
     children: [
       {
         path: "/records",
