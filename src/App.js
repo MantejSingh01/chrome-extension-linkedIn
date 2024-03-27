@@ -29,17 +29,17 @@ function App() {
   const [title, setTitle] = useState("");
 
   useEffect(() => {
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    chrome.runtime?.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type === "urlChange") {
         console.log("URL changed:", message.href);
       }
       if (message.type === "clean the storage") {
-        chrome.storage.local.clear(function () {
+        chrome.storage?.local.clear(function () {
           console.log("Local storage cleared");
         });
       }
     });
-    chrome.storage.local.get("myKey", function (result) {
+    chrome.storage?.local.get("myKey", function (result) {
       let myValue = result.myKey;
       console.log("Retrieved value from Chrome storage:", myValue);
       if (myValue) {
@@ -55,7 +55,12 @@ function App() {
   const getDetails = async (heading) => {
     try {
       console.log("============>>>>", typeof heading, JSON.stringify(heading));
-      let companyName = heading.href.split("/company/")[1].replace("/","")
+
+      const companyNameParts = heading.href.split(/\/company\//);
+
+     const companyName = companyNameParts.length === 2 ? companyNameParts[1].split('/')[0] : null;
+
+console.log(companyName); 
       const res = await fetch(
         `http://localhost:3008/getScrapedData?title=${encodeURIComponent(
           heading.textContent

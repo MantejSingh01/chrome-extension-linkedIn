@@ -36,6 +36,10 @@ body {
   font-family: 'CustomFont2';
   font-size: 12px;
   font-weight: bold;
+  flex: 0 0 auto;
+}
+.metadata-container{
+  display: flex;
 }
 .company-logo {
   width: 80px;
@@ -92,6 +96,12 @@ body {
 
 .metadata-value {
   font-family: 'CustomFont2';
+  flex: .7; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  white-space: nowrap;
+  display: flex;
+  justify-content: end;
 }
 
 .specialities-container{
@@ -154,8 +164,17 @@ body {
 
 .visited-pages-table {
   font-family: Arial, sans-serif;
-  padding: 20px;
+  margin: 20px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #f0f0f0; 
+  border-radius: 5px;
 
+}
+.selected{
+  font-size: 16px;
+  font-weight: 400;
+  font-family: "CustomFont2";
 }
 
 .table-header {
@@ -163,6 +182,7 @@ body {
   gap: 50px;
   align-items: center;
   margin-bottom: 10px;
+  padding-left: 10px;
 }
 
 .table-header h2 {
@@ -178,7 +198,36 @@ body {
     justify-content: space-between;
     align-items: center;
 }
+.header-inner button{
+  
+  width: auto;
+  height: 30px;
+  background: white;
+  border-style: solid;
+  border-color: #f1e9e9;
+}
+.header-inner  a{
+  font-family: inherit;
+  color: black;
+  border: 2px;
+  border-style: solid;
+  border-color: #f1e9e9;
+  padding: 5px 4px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 400;
 
+}
+.pagination button{
+  background: white;
+  border-style: solid;
+  border-color: #f1e9e9;
+}
+.pagination span{
+  font-size: 14px;
+  font-weight: 700;
+  font-family: "CustomFont2";
+}
 table {
   width: 100%;
   border-collapse: collapse;
@@ -206,9 +255,8 @@ td {
 }
 
 .pagination {
-  margin-top: 20px;
+  margin: 20px;
   display: flex;
-  justify-content: center;
   align-items: center;
 }
 

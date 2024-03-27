@@ -1,4 +1,6 @@
 import React, { useEffect, useRef } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBuilding, faGlobe, faTags, faUser,faLocationDot,faChartLine, faPersonShelter } from "@fortawesome/free-solid-svg-icons";
 
 const Modal = ({ onClose, data }) => {
   const modalRef = useRef(null);
@@ -22,9 +24,7 @@ const Modal = ({ onClose, data }) => {
     };
   }, [onClose]);
 
-
   const hasData = data && Object.keys(data).length > 0;
-
 
   const excludedKeys = [
     "updatedAt",
@@ -35,6 +35,16 @@ const Modal = ({ onClose, data }) => {
     "AboutUs",
     "__v",
   ];
+
+  // Mapping keys to FontAwesome icons
+  const iconMap = {
+    "Specialties": faTags,
+    "Website": faGlobe,
+    "Company size":faUser,
+    "Headquarters":faLocationDot,
+    "Founded":faChartLine,
+    "Type":faPersonShelter
+  };
 
   return (
     <div className="modal-container" onClick={handleOutsideClick}>
@@ -53,23 +63,31 @@ const Modal = ({ onClose, data }) => {
               <p className="company-about">{data.AboutUs}</p>
               <div className="company-metadata">
                 {Object.entries(data)
-                  .filter(([key]) => !excludedKeys.includes(key)) 
+                  .filter(([key]) => !excludedKeys.includes(key))
                   .map(([key, value]) => (
-                    <div key={key} className={`metadata-item ${key === "Specialties" ? "customAlignCenter":""}`}>
-                      <span className="metadata-label">{key}</span>
+                    <div key={key} className={`metadata-item ${key === "Specialties" ? "customAlignCenter" : ""}`}>
+                      <div className="metadata-conatiner">
+                        <span className="metadata-label">
+                          <FontAwesomeIcon icon={iconMap[key] || faBuilding} /> {/* Default icon for unknown keys */}
+                          &nbsp; {key}
+                        </span>
+                      </div>
                       {key === "Specialties" ? (
                         <div className="specialities-container">
-                          {value && value.split(",").map((speciality, index) => (
-                            <span key={index} className="metadata-value">
-                              {speciality}
-                            </span>
-                          ))}
+                          {value &&
+                            value.split(",").slice(0,3).map((speciality, index) => (
+                              <span key={index} className="metadata-value">
+                                {speciality}
+                              </span>
+                            ))}
                         </div>
                       ) : key === "Website" ? (
-                        <a href={value} target="_blank"><span className="metadata-value">{value}</span></a>
-                      ) : value ?(<span className="metadata-value">{value}</span>):null
-                        
-                      }
+                        <a href={value} target="_blank">
+                          <span className="metadata-value">{value}</span>
+                        </a>
+                      ) : value ? (
+                        <span className="metadata-value">{value}</span>
+                      ) : null}
                     </div>
                   ))}
               </div>

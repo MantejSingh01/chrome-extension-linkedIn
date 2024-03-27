@@ -1,3 +1,5 @@
+import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { CSVLink } from "react-csv";
 
@@ -11,8 +13,6 @@ const VisitedPagesTable = () => {
   useEffect(() => {
     getAllDetails();
   }, []);
-
-  
 
   const getAllDetails = async () => {
     const res = await fetch("http://localhost:3008/getAllRecords");
@@ -42,26 +42,25 @@ const VisitedPagesTable = () => {
         body: JSON.stringify({ id: selectedRows }),
       });
       const data = await response.json();
-      console.log(data); 
+      console.log(data);
       const updatedVisitedPages = visitedPages.filter(
         (page) => !selectedRows.includes(page._id)
       );
       setVisitedPages(updatedVisitedPages);
       setSelectedRows([]);
-    const updatedPageCount = Math.ceil(updatedVisitedPages.length / itemsPerPage);
-    if (updatedPageCount < currentPage) {
-      setCurrentPage(updatedPageCount);
-    }
-    alert(data.message? data.message :"Record(s) deleted successfully")
+      const updatedPageCount = Math.ceil(updatedVisitedPages.length / itemsPerPage);
+      if (updatedPageCount < currentPage) {
+        setCurrentPage(updatedPageCount);
+      }
+      alert(data.message ? data.message : "Record(s) deleted successfully");
     } catch (error) {
       console.error("Error deleting records:", error);
-   
     }
   };
 
   const handleCopyUrl = (url) => {
     navigator.clipboard.writeText(url);
-    alert("email copied !!")
+    alert("email copied !!");
   };
 
   const getPageData = () => {
@@ -72,12 +71,21 @@ const VisitedPagesTable = () => {
 
   const totalPages = Math.ceil(visitedPages.length / itemsPerPage);
 
+  // Function to generate an array of page numbers for pagination
+  const getPageNumbers = () => {
+    const pages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
+  };
+
   return (
     <div className="visited-pages-table">
       <div className="table-header">
-        <h3>{selectedRows.length} Selected</h3>
+        <h3 className="selected">{selectedRows.length} Selected</h3>
         <div className="header-inner">
-          <button className={selectedRows.length == 0?"disabled":""} onClick={handleDelete}>Delete</button>
+          <button className={selectedRows.length === 0 ? "disabled" : ""} onClick={handleDelete}>Delete</button>
           {visitedPages && <CSVLink data={visitedPages}>Export as CSV</CSVLink>}
         </div>
       </div>
@@ -86,7 +94,7 @@ const VisitedPagesTable = () => {
           <tr>
             <th></th>
             <th>Logo</th>
-            <th>Title</th>            
+            <th>Title</th>
             <th>URL</th>
             <th>Industry</th>
             <th>Founded</th>
@@ -107,7 +115,6 @@ const VisitedPagesTable = () => {
                 <img src={page.ImgSrc} alt="Page" />
               </td>
               <td>{page.Title}</td>
-              
               <td>
                 <a
                   href={page.Website}
@@ -119,7 +126,6 @@ const VisitedPagesTable = () => {
                   {page.Website}
                 </a>
               </td>
-
               <td>{page.Industry}</td>
               <td>{page.Founded}</td>
               <td>{page.Headquarters}</td>
@@ -128,18 +134,28 @@ const VisitedPagesTable = () => {
         </tbody>
       </table>
       <div className="pagination">
-        <button
-          onClick={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          Prev
+       
+        <span>
+          Showing {Math.min((currentPage - 1) * itemsPerPage + 1, visitedPages.length)}-
+          {Math.min(currentPage * itemsPerPage, visitedPages.length)} of {visitedPages.length}
+        </span>
+        <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
+        <FontAwesomeIcon icon={faChevronLeft}></FontAwesomeIcon>
         </button>
-        <span>{`${currentPage} of ${totalPages}`}</span>
+        {getPageNumbers().map((number) => (
+          <button
+            key={number}
+            onClick={() => setCurrentPage(number)}
+            className={number === currentPage ? "active" : ""}
+          >
+            {number}
+          </button>
+        ))}
         <button
           onClick={() => setCurrentPage(currentPage + 1)}
           disabled={currentPage === totalPages}
         >
-          Next
+         <FontAwesomeIcon icon={faChevronRight}></FontAwesomeIcon>
         </button>
       </div>
     </div>
